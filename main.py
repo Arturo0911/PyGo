@@ -4,16 +4,9 @@ import os
 import sys
 
 
-#connections_list = {}
-
-
-
-
 clients = []
 nicknames = []
 
-
-#def Server():
     
     
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,6 +23,27 @@ def Broadcast(message):
         client.send(message)
 
 
+def write():
+    while True:
+
+        try:
+            
+            message_to_all = input("Indica un mensaje para todos:")
+            
+            if message_to_all == "exit":
+                
+                server.close()
+                sys.exit()
+
+            else:
+
+                for client in clients:
+                    client.send(message_to_all.encode('ascii'))
+            
+
+        except Exception as e:
+            print("Error by: ", str(e))
+            break
 
 
 def Handled(client):
@@ -65,8 +79,13 @@ def receive():
         Broadcast('{} joined the chat '.format(nickname).encode('ascii'))
 
         client.send('Connected to the server'.encode('ascii'))
-
+        
         thread = threading.Thread(target=Handled, args= (client,))
         thread.start()
+        
+        if len(clients) > 1:
+            write()
+        else:
+            pass
 
 receive()
