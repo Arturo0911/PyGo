@@ -19,7 +19,9 @@ class Client():
         while True:
 
             msg = input("client: ")
+            #msg = b+msg
 
+            #mensaje = b'Arturo como vas?'
             if msg != "exit":
                 self.msg_send(msg)
             else:
@@ -31,11 +33,11 @@ class Client():
         while True:
 
             try:
-                data = self.sock.recv(1024)
+                data = self.sock.recv(1024).decode('ascii')
 
                 if data:
                     print("la data", data)
-                    print(pickle.loads(data))
+                    print((data))
 
             except:
 
@@ -44,7 +46,7 @@ class Client():
 
     def msg_send(self, msg):
 
-        self.sock.send(pickle.dumps(msg))
+        self.sock.sendall(b'{msg}')
 
 
 cliente = Client()
